@@ -1,18 +1,18 @@
 {
   "name": "test-saga",
   "description": "A bunch of helpers to make redux-saga testing more powerful.",
-  "main": "dist/index.js",
+  "main": "unit/index.js",
   "scripts": {
-    "build": "rimraf dist && babel -D src -d dist",
+    "build": "rimraf unit && babel -D src -d .",
     "lint": "xo",
     "test": "node --harmony node_modules/.bin/ava",
-    "test:build": "yarn run test -- 'dist/**/*.spec.js'",
+    "test:build": "yarn run test -- 'unit/**/*.spec.js'",
     "coverage": "nyc yarn run test && nyc check-coverage --lines 100 --functions 100 --branches 100",
     "commit": "yarn run coverage && git cz",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "files": [
-    "dist"
+    "unit"
   ],
   "repository": {
     "url": "https://github.com/ayatkevich/test-saga.git",
@@ -83,7 +83,7 @@
       ]
     },
     "ignores": [
-      "dist/**/*"
+      "unit/**/*"
     ]
   },
   "dependencies": {
