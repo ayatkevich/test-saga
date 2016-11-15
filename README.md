@@ -1,4 +1,4 @@
-# test-saga
+# test-saga [![Build Status](https://travis-ci.org/ayatkevich/test-saga.svg?branch=master)](https://travis-ci.org/ayatkevich/test-saga)
 Work in progress! A bunch of helpers to make redux-saga testing more powerful.
 
 ## Why?
