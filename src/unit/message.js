@@ -36,6 +36,7 @@ const prepareEff = (step = {}) => {
   const eff = step[R.toUpper(name)];
   switch (name) {
     case 'call':
+    case 'cps':
       return [name,
         [eff.context ? [eff.context, eff.fn] : eff.fn, ...eff.args]
       ];

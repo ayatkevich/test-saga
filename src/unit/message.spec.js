@@ -53,6 +53,10 @@ test('prepareEff', t => {
     ['call', ['fn', 1, 2, 3]]
   );
   t.deepEqual(
+    prepareEff({CPS: {fn: 'fn', args: ['a', 'b', 'c']}}),
+    ['cps', ['fn', 'a', 'b', 'c']]
+  );
+  t.deepEqual(
     prepareEff({CALL: {fn: 'fn', context: {a: 1}, args: [1]}}),
     ['call', [[{a: 1}, 'fn'], 1]]
   );

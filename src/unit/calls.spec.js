@@ -1,6 +1,6 @@
 const test = require('ava');
 const R = require('ramda');
-const {call, apply, take} = require('redux-saga/effects');
+const {call, apply, cps, take} = require('redux-saga/effects');
 const {assertionMessage} = require('./message');
 const {next} = require('./helpers');
 
@@ -40,9 +40,10 @@ test('call(fn, ...args)', t => {
     ['call', [fn]]
   ));
 
-  t.notThrows(() => calls('fn')(next(call(fn))));
-  t.notThrows(() => calls('fn', 1)(next(call(fn, 1))));
-  t.notThrows(() => calls('fn', 1, {}, {a: 1})(next(call(fn, 1, {}, {a: 1}))));
+  calls(fn)(next(call(fn)));
+  calls('fn')(next(call(fn)));
+  calls('fn', 1)(next(call(fn, 1)));
+  calls('fn', 1, {}, {a: 1})(next(call(fn, 1, {}, {a: 1})));
 });
 
 test('call([context, fn], ...args)', t => {
@@ -51,7 +52,7 @@ test('call([context, fn], ...args)', t => {
     ['call', [[{}, fn]]]
   ));
 
-  t.notThrows(() => calls(['context', 'fn'])(next(call([context, fn]))));
+  calls(['context', 'fn'])(next(call([context, fn])));
 });
 
 test('apply(context, fn, [args])', t => {
@@ -59,4 +60,24 @@ test('apply(context, fn, [args])', t => {
     ['call', [fn]],
     ['call', [[{}, fn]]]
   ));
+});
+
+test('cps(fn, ...args)', t => {
+  t.throws(() => calls(fn)(next(cps(fn, 1))), msgIs(
+    ['cps', [fn]],
+    ['cps', [fn, 1]]
+  ));
+
+  calls(fn)(next(cps(fn)));
+});
+
+test('cps([context, fn], ...args)', t => {
+  t.throws(() => calls('fn')(next(cps([context, fn]))), msgIs(
+    ['cps', [fn]],
+    ['cps', [[{}, fn]]]
+  ));
+
+  calls([{}, fn])(next(cps([context, fn])));
+  calls([context, fn])(next(cps([context, fn])));
+  calls(['context', 'fn'])(next(cps([context, fn])));
 });
