@@ -4,7 +4,7 @@ const {assertionMessage, prepareEff, getEffName} = require('./message');
 const {sagaSignature, namedFn} = require('./helpers');
 
 module.exports = (fn, ...args) => ({value: step = {}} = {}) => {
-  const expectedEffNames = ['call', 'cps'];
+  const expectedEffNames = ['call', 'cps', 'fork'];
   const [defaultEffName] = expectedEffNames;
   const expectedArgs = [R.is(String, fn) ? namedFn(fn) : fn, ...args];
 

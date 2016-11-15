@@ -37,6 +37,7 @@ const prepareEff = (step = {}) => {
   switch (name) {
     case 'call':
     case 'cps':
+    case 'fork':
       return [name,
         [eff.context ? [eff.context, eff.fn] : eff.fn, ...eff.args]
       ];

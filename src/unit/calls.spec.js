@@ -1,6 +1,6 @@
 const test = require('ava');
 const R = require('ramda');
-const {call, apply, cps, take} = require('redux-saga/effects');
+const {call, apply, take, ...effects} = require('redux-saga/effects');
 const {assertionMessage} = require('./message');
 const {next} = require('./helpers');
 
@@ -62,22 +62,29 @@ test('apply(context, fn, [args])', t => {
   ));
 });
 
-test('cps(fn, ...args)', t => {
-  t.throws(() => calls(fn)(next(cps(fn, 1))), msgIs(
-    ['cps', [fn]],
-    ['cps', [fn, 1]]
-  ));
+const testDrivativeCallEffect = name => {
+  const eff = effects[name];
 
-  calls(fn)(next(cps(fn)));
-});
+  test(`${name}(fn, ...args)`, t => {
+    t.throws(() => calls(fn)(next(eff(fn, 1))), msgIs(
+      [name, [fn]],
+      [name, [fn, 1]]
+    ));
 
-test('cps([context, fn], ...args)', t => {
-  t.throws(() => calls('fn')(next(cps([context, fn]))), msgIs(
-    ['cps', [fn]],
-    ['cps', [[{}, fn]]]
-  ));
+    calls(fn)(next(eff(fn)));
+  });
 
-  calls([{}, fn])(next(cps([context, fn])));
-  calls([context, fn])(next(cps([context, fn])));
-  calls(['context', 'fn'])(next(cps([context, fn])));
-});
+  test(`${name}([context, fn], ...args)`, t => {
+    t.throws(() => calls('fn')(next(eff([context, fn]))), msgIs(
+      [name, [fn]],
+      [name, [[{}, fn]]]
+    ));
+
+    calls([{}, fn])(next(eff([context, fn])));
+    calls([context, fn])(next(eff([context, fn])));
+    calls(['context', 'fn'])(next(eff([context, fn])));
+  });
+};
+
+testDrivativeCallEffect('cps');
+testDrivativeCallEffect('fork');
