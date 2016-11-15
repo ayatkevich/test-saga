@@ -14,12 +14,17 @@ module.exports = (fn, ...args) => ({value: step = {}} = {}) => {
     assertionMessage(expected, prepareEff()));
 
   const err = assertionMessage(expected, prepareEff(step));
+  const eff = step.CALL;
 
-  assert(step.CALL, err);
+  assert(eff, err);
 
-  if (typeof fn === 'function') {
-    assert(fn === step.CALL.fn, err);
+  if (R.type(fn) === 'Function') {
+    assert(fn === eff.fn, err);
   }
 
-  assert.deepEqual(step.CALL.args, args, err);
+  if (R.type(fn) === 'Array' || eff.context) {
+    assert(R.is(Array, fn) && fn.length === 2 && Boolean(eff.context), err);
+  }
+
+  assert.deepEqual(eff.args, args, err);
 };

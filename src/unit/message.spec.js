@@ -4,23 +4,32 @@ const {assertionMessage, getEffName, prepareEff} = require('./message');
 function fnName() {}
 
 test('assertionMessage', t => {
+  const expected = ['call', ['fnName', 1, true, 'string', {}, [], null]];
+  const expectedMessage = `Expected:
+      yield call("fnName", 1, true, "string", {}, [], null);`;
+
   t.is(assertionMessage(
-    ['call', [
-      'fnName', 1, true, 'string', {}, [], null]],
+    expected,
     ['call', [
       fnName, 0, false, () => {}, {a: 1}, [1]]]), `
-    Expected:
-      yield call("fnName", 1, true, "string", {}, [], null);
+    ${expectedMessage}
     Got:
       yield call(fnName, 0, false, function () {}, {"a":1}, [1]);
   `);
 
   t.is(assertionMessage(
+    expected,
     ['call', [
-      'fnName', 1, true, 'string', {}, [], null]],
+      [{b: 2}, fnName], 0, false, () => {}, {a: 1}, [1]]]), `
+    ${expectedMessage}
+    Got:
+      yield call([{"b":2}, fnName], 0, false, function () {}, {"a":1}, [1]);
+  `);
+
+  t.is(assertionMessage(
+    expected,
     []), `
-    Expected:
-      yield call("fnName", 1, true, "string", {}, [], null);
+    ${expectedMessage}
     Got:
       nothing
   `);
@@ -42,6 +51,10 @@ test('prepareEff', t => {
   t.deepEqual(
     prepareEff({CALL: {fn: 'fn', args: [1, 2, 3]}}),
     ['call', ['fn', 1, 2, 3]]
+  );
+  t.deepEqual(
+    prepareEff({CALL: {fn: 'fn', context: {a: 1}, args: [1]}}),
+    ['call', [[{a: 1}, 'fn'], 1]]
   );
   t.deepEqual(
     prepareEff({TAKE: {pattern: 'action'}}),

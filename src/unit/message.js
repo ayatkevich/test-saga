@@ -1,6 +1,9 @@
 const R = require('ramda');
 
 const inspectArgs = args => R.pipe(R.map(v => {
+  if (R.is(Array, v)) {
+    return `[${inspectArgs(v)}]`;
+  }
   if (R.is(Function, v)) {
     return v.name || v.toString();
   }
@@ -33,7 +36,9 @@ const prepareEff = (step = {}) => {
   const eff = step[R.toUpper(name)];
   switch (name) {
     case 'call':
-      return [name, [eff.fn, ...eff.args]];
+      return [name,
+        [eff.context ? [eff.context, eff.fn] : eff.fn, ...eff.args]
+      ];
 
     case 'take':
       return [name, [eff.pattern]];
