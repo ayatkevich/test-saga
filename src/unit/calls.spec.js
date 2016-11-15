@@ -88,3 +88,4 @@ const testDrivativeCallEffect = name => {
 
 testDrivativeCallEffect('cps');
 testDrivativeCallEffect('fork');
+testDrivativeCallEffect('spawn');

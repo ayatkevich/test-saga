@@ -20,24 +20,28 @@ const assertionMessage = ([expectedEff, expectedArgs],
         'nothing'}
   `;
 
-const getEffName = (eff = {}) => {
-  const name = R.find(key => R.toUpper(key) === key, R.keys(eff));
+const retrieveEff = (step = {}) => {
+  let name = R.find(key => R.toUpper(key) === key, R.keys(step));
   if (!name) {
-    return;
+    return {name: undefined, eff: {}};
   }
-  return R.toLower(name);
+  const eff = step[name];
+  if (name === 'FORK' && eff.detached) {
+    name = 'SPAWN';
+  }
+  return {name: R.toLower(name), eff};
 };
 
 const prepareEff = (step = {}) => {
-  const name = getEffName(step);
+  const {name, eff} = retrieveEff(step);
   if (!name) {
     return [];
   }
-  const eff = step[R.toUpper(name)];
   switch (name) {
     case 'call':
     case 'cps':
     case 'fork':
+    case 'spawn':
       return [name,
         [eff.context ? [eff.context, eff.fn] : eff.fn, ...eff.args]
       ];
@@ -52,6 +56,6 @@ const prepareEff = (step = {}) => {
 
 module.exports = {
   assertionMessage,
-  getEffName,
+  retrieveEff,
   prepareEff
 };

@@ -1,10 +1,10 @@
 const assert = require('assert');
 const R = require('ramda');
-const {assertionMessage, prepareEff, getEffName} = require('./message');
+const {assertionMessage, prepareEff, retrieveEff} = require('./message');
 const {sagaSignature, namedFn} = require('./helpers');
 
 module.exports = (fn, ...args) => ({value: step = {}} = {}) => {
-  const expectedEffNames = ['call', 'cps', 'fork'];
+  const expectedEffNames = ['call', 'cps', 'fork', 'spawn'];
   const [defaultEffName] = expectedEffNames;
   const expectedArgs = [R.is(String, fn) ? namedFn(fn) : fn, ...args];
 
@@ -15,10 +15,11 @@ module.exports = (fn, ...args) => ({value: step = {}} = {}) => {
   assert(step && step[sagaSignature],
     assertionMessage([defaultEffName, expectedArgs], []));
 
-  const effName =
-    R.find(R.equals(getEffName(step)), expectedEffNames) || defaultEffName;
-  const eff = step[R.toUpper(effName)];
-  const err = assertionMessage([effName, expectedArgs], prepareEff(step));
+  const {name: effName, eff} = retrieveEff(step);
+  const err = assertionMessage([
+    R.find(R.equals(effName), expectedEffNames) || defaultEffName,
+    expectedArgs
+  ], prepareEff(step));
 
   assert(eff, err);
 

@@ -1,5 +1,5 @@
 const test = require('ava');
-const {assertionMessage, getEffName, prepareEff} = require('./message');
+const {assertionMessage, retrieveEff, prepareEff} = require('./message');
 
 function fnName() {}
 
@@ -35,12 +35,16 @@ test('assertionMessage', t => {
   `);
 });
 
-test('getEffName', t => {
-  t.is(getEffName(), undefined);
-  t.is(getEffName({}), undefined);
-  t.is(getEffName({a: 1, b: 2, c: 3}), undefined);
-  t.is(getEffName({A: 1, b: 2, c: 3}), 'a');
-  t.is(getEffName({A: 1, B: 2, C: 3}), 'a');
+test('retrieveEff', t => {
+  t.deepEqual(retrieveEff(), {name: undefined, eff: {}});
+  t.deepEqual(retrieveEff({}), {name: undefined, eff: {}});
+  t.deepEqual(retrieveEff({a: 1, b: 2, c: 3}), {name: undefined, eff: {}});
+  t.deepEqual(retrieveEff({A: 1, b: 2, c: 3}), {name: 'a', eff: 1});
+  t.deepEqual(retrieveEff({A: 1, B: 2, C: 3}), {name: 'a', eff: 1});
+  t.deepEqual(
+    retrieveEff({FORK: {a: 1, detached: true}}),
+    {name: 'spawn', eff: {a: 1, detached: true}}
+  );
 });
 
 test('prepareEff', t => {
@@ -59,6 +63,10 @@ test('prepareEff', t => {
   t.deepEqual(
     prepareEff({FORK: {fn: 'fn', args: ['a']}}),
     ['fork', ['fn', 'a']]
+  );
+  t.deepEqual(
+    prepareEff({FORK: {fn: 'fn', args: ['a'], detached: true}}),
+    ['spawn', ['fn', 'a']]
   );
   t.deepEqual(
     prepareEff({CALL: {fn: 'fn', context: {a: 1}, args: [1]}}),
