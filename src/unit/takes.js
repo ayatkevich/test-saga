@@ -54,4 +54,12 @@ const takes = value => ({value: step = {}} = {}) => {
   }
 };
 
-module.exports = value => [takes(value), gets(value)];
+module.exports = value => {
+  const pipeline = [takes(value)];
+  if (R.isArrayLike(value)) {
+    return pipeline;
+  } else if (R.is(String, value)) {
+    return [...pipeline, gets({type: value})];
+  }
+  return [...pipeline, gets(value)];
+};

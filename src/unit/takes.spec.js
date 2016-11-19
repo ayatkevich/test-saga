@@ -8,10 +8,22 @@ const takes = require('./takes');
 
 const login = action('LOGIN');
 
-test('takes', t => {
-  const [takesTest, gets] = takes('arg');
+test('takes(string)', t => {
+  const [takesTest, gets] = takes('action');
   t.is(R.type(takesTest), 'Function');
-  t.deepEqual(gets, {value: 'arg', action: 'next'});
+  t.deepEqual(gets, {value: {type: 'action'}, action: 'next'});
+});
+
+test('takes(object)', t => {
+  const [takesTest, gets] = takes({type: 'action', a: 1});
+  t.is(R.type(takesTest), 'Function');
+  t.deepEqual(gets, {value: {type: 'action', a: 1}, action: 'next'});
+});
+
+test('takes(array)', t => {
+  const [takesTest, gets] = takes(['x', 'y']);
+  t.is(R.type(takesTest), 'Function');
+  t.is(gets, undefined);
 });
 
 const generateTests = effName => {
