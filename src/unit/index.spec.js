@@ -1,18 +1,6 @@
 const test = require('ava');
 const {gets, throws, testSaga} = require('.');
 
-test('gets', t => {
-  t.deepEqual(gets(1), {value: 1, action: 'next'});
-  t.deepEqual(gets(), {value: undefined, action: 'next'});
-  t.deepEqual(gets(2, 3, 4), {value: 2, action: 'next'});
-});
-
-test('throws', t => {
-  t.deepEqual(throws(1), {value: 1, action: 'throw'});
-  t.deepEqual(throws(), {value: undefined, action: 'throw'});
-  t.deepEqual(throws(2, 3, 4), {value: 2, action: 'throw'});
-});
-
 test('testSaga', t => {
   function * regeneratedTestGen() {
     try {
@@ -48,4 +36,16 @@ test('testSaga', t => {
     throws(testErr),
     value => t.deepEqual(value, {value: testErr, done: false})
   ]);
+
+  let counter = 0;
+  function * counterGen() {
+    yield 1;
+    yield 2;
+    yield 3;
+    yield 4;
+  }
+  /* eslint-disable no-return-assign */
+  const inc = ({value: x}) => counter += x;
+  testSaga(counterGen, [[inc], [[inc], inc], inc]);
+  t.is(counter, 10);
 });

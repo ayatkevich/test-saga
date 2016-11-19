@@ -1,15 +1,8 @@
 const test = require('ava');
-const R = require('ramda');
 const {call, apply, take, ...effects} = require('redux-saga/effects');
-const {assertionMessage} = require('./message');
-const {next} = require('./helpers');
+const {next, msgIs} = require('./helpers');
 
 const calls = require('./calls');
-
-const msgIs = (...args) => R.pipe(
-  R.prop('message'),
-  R.equals(assertionMessage(...args))
-);
 
 const fn = () => {};
 const action = () => {};

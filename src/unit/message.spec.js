@@ -77,6 +77,10 @@ test('prepareEff', t => {
     ['take', ['action']]
   );
   t.deepEqual(
+    prepareEff({TAKE: {pattern: 'action', maybe: true}}),
+    ['takem', ['action']]
+  );
+  t.deepEqual(
     prepareEff({UNKNOWN: {x: 1, y: 2}}),
     ['unknown']
   );

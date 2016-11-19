@@ -1,6 +1,7 @@
 const test = require('ava');
 const R = require('ramda');
-const {next, namedFn} = require('./helpers');
+const {assertionMessage} = require('./message');
+const {next, namedFn, msgIs} = require('./helpers');
 
 test('next', t => {
   t.deepEqual(next(), {value: undefined, done: false});
@@ -13,4 +14,9 @@ test('namedFn', t => {
   t.is(R.type(fn), 'Function');
   t.is(fn.name, 'named');
   t.notThrows(() => fn());
+});
+
+test('msgIs', t => {
+  const args = [['eff', []], []];
+  t.is(msgIs(...args)({message: assertionMessage(...args)}), true);
 });

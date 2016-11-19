@@ -47,7 +47,7 @@ const prepareEff = (step = {}) => {
       ];
 
     case 'take':
-      return [name, [eff.pattern]];
+      return [eff.maybe ? 'takem' : name, [eff.pattern]];
 
     default:
       return [name];

@@ -1,8 +1,12 @@
+const R = require('ramda');
+
+const {gets, throws} = require('./actions');
+
 const testSaga = (saga, steps) => {
   const generator = saga();
   let next = {action: 'next'};
 
-  for (const step of steps) {
+  for (const step of R.flatten(steps)) {
     if (typeof step !== 'undefined' && step && step.action) {
       next = step;
       continue;
@@ -14,12 +18,10 @@ const testSaga = (saga, steps) => {
   }
 };
 
-const gets = value => ({value, action: 'next'});
-const throws = value => ({value, action: 'throw'});
-
 module.exports = {
   testSaga,
   gets,
   throws,
-  calls: require('./calls')
+  calls: require('./calls'),
+  takes: require('./takes')
 };
