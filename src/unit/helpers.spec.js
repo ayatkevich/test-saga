@@ -1,7 +1,7 @@
 const test = require('ava');
 const R = require('ramda');
 const {assertionMessage} = require('./message');
-const {next, namedFn, msgIs} = require('./helpers');
+const {next, namedFn, msgIs, msgTest} = require('./helpers');
 
 test('next', t => {
   t.deepEqual(next(), {value: undefined, done: false});
@@ -19,4 +19,8 @@ test('namedFn', t => {
 test('msgIs', t => {
   const args = [['eff', []], []];
   t.is(msgIs(...args)({message: assertionMessage(...args)}), true);
+});
+
+test('msgTest', t => {
+  t.is(msgTest(/ok/)({message: 'Fukuoka'}), true);
 });

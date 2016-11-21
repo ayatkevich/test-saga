@@ -20,6 +20,11 @@ const assertionMessage = ([expectedEff, expectedArgs],
         'nothing'}
   `;
 
+const camelize = R.pipe(
+  R.toLower,
+  R.replace(/_[a-z]/g, R.pipe(R.replace('_', ''), R.toUpper))
+);
+
 const retrieveEff = (step = {}) => {
   let name = R.find(key => R.toUpper(key) === key, R.keys(step));
   if (!name) {
@@ -29,7 +34,7 @@ const retrieveEff = (step = {}) => {
   if (name === 'FORK' && eff.detached) {
     name = 'SPAWN';
   }
-  return {name: R.toLower(name), eff};
+  return {name: camelize(name), eff};
 };
 
 const prepareEff = (step = {}) => {
@@ -48,6 +53,9 @@ const prepareEff = (step = {}) => {
 
     case 'take':
       return [eff.maybe ? 'takem' : name, [eff.pattern]];
+
+    case 'actionChannel':
+      return [name, R.filter(R.identity, [eff.pattern, eff.buffer])];
 
     default:
       return [name];

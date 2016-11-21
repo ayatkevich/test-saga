@@ -81,6 +81,10 @@ test('prepareEff', t => {
     ['takem', ['action']]
   );
   t.deepEqual(
+    prepareEff({ACTION_CHANNEL: {pattern: 'p', buffer: undefined}}),
+    ['actionChannel', ['p']]
+  );
+  t.deepEqual(
     prepareEff({UNKNOWN: {x: 1, y: 2}}),
     ['unknown']
   );
