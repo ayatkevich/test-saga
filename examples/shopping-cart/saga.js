@@ -16,7 +16,7 @@ const api = {
 
 function * submit() {
   const items = yield call(get, 'items');
-  if (!items || !items.length) {
+  if (!items || items.length === 0) {
     return;
   }
   yield call(api.shoppingCartSubmit, items);
