@@ -7,13 +7,13 @@ Work in progress! A bunch of helpers to make redux-saga testing more powerful.
 
 ## Examples
 
-### Unit testing
+### White-box testing
 
 Let's assume we want to develop an auth saga.
 
 ```js
 import test from 'ava';
-import {testSaga} from 'test-saga/unit';
+import {testSaga} from 'test-saga/white-box';
 
 function * auth() {
 }
@@ -27,7 +27,7 @@ So we can do something like this to check it:
 
 ```js
 import test from 'ava';
-import {testSaga, calls} from 'test-saga/unit';
+import {testSaga, calls} from 'test-saga/white-box';
 
 function * auth() {
 }
@@ -52,7 +52,7 @@ And the working implementation for this would be something like:
 
 ```js
 import test from 'ava';
-import {testSaga, calls} from 'test-saga/unit';
+import {testSaga, calls} from 'test-saga/white-box';
 
 import {get} from 'lockr';
 import {call} from 'redux-saga/effects';
@@ -79,7 +79,7 @@ So,
 
 ```js
 import test from 'ava';
-import {testSaga, calls} from 'test-saga/unit';
+import {testSaga, calls} from 'test-saga/white-box';
 
 import {get} from 'lockr';
 import {call} from 'redux-saga/effects';

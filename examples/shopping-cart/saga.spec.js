@@ -5,7 +5,7 @@ const {
   takes,
   createsChannel,
   gets
-} = require('../../src/unit');
+} = require('../../src/white-box');
 
 const actions = require('./actions');
 const shoppingCart = require('./saga');
