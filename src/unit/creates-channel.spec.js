@@ -1,16 +1,18 @@
 const test = require('ava');
 
 const {actionChannel} = require('redux-saga/effects');
-const {tester} = require('./takes');
 const {next, msgIs} = require('./helpers');
-const {generateTests, generateEffTests} = require('./takes.spec');
+const {generateEffTests} = require('./takes.spec');
 
-const createsChannel = tester('createsChannel', 'actionChannel');
+const createsChannel = require('./creates-channel');
 
-generateTests('createsChannel', createsChannel);
+test('createsChannel', t => {
+  t.deepEqual(createsChannel([1, 2])[1], {value: [1, 2], action: 'next'});
+});
+
 generateEffTests('actionChannel', createsChannel);
 
-test('createsChannel(pattern, buffer)', t => {
+test('actionChannel(pattern, buffer)', t => {
   t.throws(() => createsChannel('pattern')[0](
     next(actionChannel('pattern', {buffer: 'a'}))), msgIs(
     ['actionChannel', ['pattern']],

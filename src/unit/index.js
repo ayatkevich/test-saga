@@ -23,5 +23,6 @@ module.exports = {
   gets,
   throws,
   calls: require('./calls'),
-  takes: require('./takes')
+  takes: require('./takes'),
+  createsChannel: require('./creates-channel')
 };

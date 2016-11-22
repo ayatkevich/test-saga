@@ -22,6 +22,7 @@ const testerFn = (helperName, effCreatorName) =>
       prepareEff(step)
     );
 
+    assert(effName === effCreatorName, err);
     if (R.is(Array, eff.pattern)) {
       if (R.is(Array, pattern)) {
         assert.deepEqual(pattern, eff.pattern, err);
@@ -53,13 +54,12 @@ const testerFn = (helperName, effCreatorName) =>
       if (effName === 'actionChannel') {
         assert.deepEqual(buffer, eff.buffer, err);
       }
-      assert(effName === effCreatorName, err);
       assert(pattern === eff.pattern, err);
     }
   };
 
-const tester = (helperName, effCreatorName) => (value, ...args) => {
-  const pipeline = [testerFn(helperName, effCreatorName)(value, ...args)];
+module.exports = value => {
+  const pipeline = [testerFn('takes', 'take')(value)];
   if (R.isArrayLike(value)) {
     return pipeline;
   } else if (R.is(String, value)) {
@@ -68,6 +68,4 @@ const tester = (helperName, effCreatorName) => (value, ...args) => {
   return [...pipeline, gets(value)];
 };
 
-module.exports = tester('takes', 'take');
-
-module.exports.tester = tester;
+module.exports.testerFn = testerFn;
