@@ -8,7 +8,7 @@
     "test": "node --harmony node_modules/.bin/ava",
     "test:build": "yarn run test -- 'white-box/**/*.spec.js'",
     "coverage": "nyc yarn run test && nyc check-coverage --lines 100 --functions 100 --branches 100",
-    "commit": "yarn run coverage && git cz",
+    "commit": "yarn run lint && yarn run coverage && git cz",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
   "files": [
