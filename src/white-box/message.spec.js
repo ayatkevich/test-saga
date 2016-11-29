@@ -45,6 +45,10 @@ test('retrieveEff', t => {
     retrieveEff({FORK: {a: 1, detached: true}}),
     {name: 'spawn', eff: {a: 1, detached: true}}
   );
+  t.deepEqual(
+    retrieveEff({PUT: {a: 1, sync: true}}),
+    {name: 'put.sync', eff: {a: 1, sync: true}}
+  );
 });
 
 test('prepareEff', t => {
@@ -83,6 +87,22 @@ test('prepareEff', t => {
   t.deepEqual(
     prepareEff({ACTION_CHANNEL: {pattern: 'p', buffer: undefined}}),
     ['actionChannel', ['p']]
+  );
+  t.deepEqual(
+    prepareEff({PUT: {action: {type: 'a'}}}),
+    ['put', [{type: 'a'}]]
+  );
+  t.deepEqual(
+    prepareEff({PUT: {action: {type: 'b'}, sync: true}}),
+    ['put.sync', [{type: 'b'}]]
+  );
+  t.deepEqual(
+    prepareEff({PUT: {channel: {}, action: {type: 'd'}}}),
+    ['put', ['[Channel]', {type: 'd'}]]
+  );
+  t.deepEqual(
+    prepareEff({PUT: {channel: {}, action: {type: 'c'}, sync: true}}),
+    ['put.sync', ['[Channel]', {type: 'c'}]]
   );
   t.deepEqual(
     prepareEff({UNKNOWN: {x: 1, y: 2}}),

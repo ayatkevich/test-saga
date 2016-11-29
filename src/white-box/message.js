@@ -33,9 +33,13 @@ const retrieveEff = (step = {}) => {
   const eff = step[name];
   if (name === 'FORK' && eff.detached) {
     name = 'SPAWN';
+  } else if (name === 'PUT' && eff.sync) {
+    name = 'PUT.SYNC';
   }
   return {name: camelize(name), eff};
 };
+
+const filterTruthy = R.filter(R.identity);
 
 const prepareEff = (step = {}) => {
   const {name, eff} = retrieveEff(step);
@@ -55,7 +59,11 @@ const prepareEff = (step = {}) => {
       return [eff.maybe ? 'takem' : name, [eff.pattern]];
 
     case 'actionChannel':
-      return [name, R.filter(R.identity, [eff.pattern, eff.buffer])];
+      return [name, filterTruthy([eff.pattern, eff.buffer])];
+
+    case 'put':
+    case 'put.sync':
+      return [name, filterTruthy([eff.channel && '[Channel]', eff.action])];
 
     default:
       return [name];

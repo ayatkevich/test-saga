@@ -24,5 +24,6 @@ module.exports = {
   throws,
   calls: require('./calls'),
   takes: require('./takes'),
-  createsChannel: require('./creates-channel')
+  createsChannel: require('./creates-channel'),
+  puts: require('./puts')
 };
