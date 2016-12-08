@@ -1,7 +1,16 @@
 const test = require('ava');
-const {assertionMessage, retrieveEff, prepareEff} = require('./message');
+const R = require('ramda');
+const {
+  assertionMessage, retrieveEff, prepareEff, namedFn} = require('./message');
 
 function fnName() {}
+
+test('namedFn', t => {
+  const fn = namedFn('named');
+  t.is(R.type(fn), 'Function');
+  t.is(fn.name, 'named');
+  t.notThrows(() => fn());
+});
 
 test('assertionMessage', t => {
   const expected = ['call', ['fnName', 1, true, 'string', {}, [], null]];
@@ -96,14 +105,23 @@ test('prepareEff', t => {
     prepareEff({PUT: {action: {type: 'b'}, sync: true}}),
     ['put.sync', [{type: 'b'}]]
   );
-  t.deepEqual(
-    prepareEff({PUT: {channel: {}, action: {type: 'd'}}}),
-    ['put', ['[Channel]', {type: 'd'}]]
-  );
-  t.deepEqual(
-    prepareEff({PUT: {channel: {}, action: {type: 'c'}, sync: true}}),
-    ['put.sync', ['[Channel]', {type: 'c'}]]
-  );
+
+  const testPutWithChannel = (effName, opts = {}) => {
+    const withChannel = prepareEff({
+      PUT: {
+        channel: {},
+        action: {type: 'd'},
+        ...opts
+      }
+    });
+    t.is(withChannel[0], effName);
+    t.is(typeof withChannel[1][0] === 'function' &&
+         withChannel[1][0].name === '[Channel]', true);
+    t.deepEqual(withChannel[1][1], {type: 'd'});
+  };
+  testPutWithChannel('put');
+  testPutWithChannel('put.sync', {sync: true});
+
   t.deepEqual(
     prepareEff({UNKNOWN: {x: 1, y: 2}}),
     ['unknown']

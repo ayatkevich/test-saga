@@ -1,5 +1,8 @@
 const R = require('ramda');
 
+const namedFn = value =>
+  Object.defineProperty(() => {}, 'name', {value});
+
 const inspectArgs = args => R.pipe(R.map(v => {
   if (R.is(Array, v)) {
     return `[${inspectArgs(v)}]`;
@@ -63,7 +66,9 @@ const prepareEff = (step = {}) => {
 
     case 'put':
     case 'put.sync':
-      return [name, filterTruthy([eff.channel && '[Channel]', eff.action])];
+      return [name,
+        filterTruthy([eff.channel && namedFn('[Channel]'), eff.action])
+      ];
 
     default:
       return [name];
@@ -73,5 +78,6 @@ const prepareEff = (step = {}) => {
 module.exports = {
   assertionMessage,
   retrieveEff,
-  prepareEff
+  prepareEff,
+  namedFn
 };

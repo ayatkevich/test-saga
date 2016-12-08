@@ -2,7 +2,9 @@ const test = require('ava');
 const R = require('ramda');
 const action = require('action-helper');
 const {put, take} = require('redux-saga/effects');
+const {channel} = require('redux-saga');
 const {next, msgIs, msgTest} = require('./helpers');
+const {namedFn} = require('./message');
 
 const puts = require('./puts');
 
@@ -41,4 +43,11 @@ test('puts(action)', t => {
 
   assertActions(put, 'put');
   assertActions(put.sync, 'put.sync');
+
+  t.throws(() => puts({a: 1})(next(put(channel(), {a: 2}))), msgIs(
+    ['put', [namedFn('[Channel]'), {a: 1}]],
+    ['put', [namedFn('[Channel]'), {a: 2}]]
+  ));
+
+  puts({a: 1})(next(put(channel(), {a: 1})));
 });

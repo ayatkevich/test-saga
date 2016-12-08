@@ -1,20 +1,24 @@
 const assert = require('assert');
 const R = require('ramda');
-const {assertionMessage, prepareEff, retrieveEff} = require('./message');
 const {sagaSignature} = require('./helpers');
+const {
+  assertionMessage, prepareEff, retrieveEff, namedFn} = require('./message');
 
 module.exports = action => ({value: step = {}} = {}) => {
   assert(action, 'puts(action) requires action argument');
 
   const expectedEffNames = ['put', 'put.sync'];
-  const expectedEff = (effName = expectedEffNames[0]) => [effName, [action]];
+  const expectedEff = (effName = expectedEffNames[0], channel) => [
+    effName, channel ? [namedFn('[Channel]'), action] : [action]
+  ];
 
   assert(step[sagaSignature],
     assertionMessage(expectedEff(), []));
 
   const {name: effName, eff} = retrieveEff(step);
   const err = assertionMessage(expectedEff(
-    R.indexOf(effName, expectedEffNames) === -1 ? undefined : effName
+    R.indexOf(effName, expectedEffNames) === -1 ? undefined : effName,
+    eff.channel
   ), prepareEff(step));
 
   assert(R.indexOf(effName, expectedEffNames) !== -1, err);
