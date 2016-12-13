@@ -62,6 +62,13 @@ test('retrieveEff', t => {
 
 test('prepareEff', t => {
   t.deepEqual(
+    prepareEff({UNKNOWN: {x: 1, y: 2}}),
+    ['unknown']
+  );
+});
+
+test('prepareEff call', t => {
+  t.deepEqual(
     prepareEff(),
     []
   );
@@ -85,6 +92,9 @@ test('prepareEff', t => {
     prepareEff({CALL: {fn: 'fn', context: {a: 1}, args: [1]}}),
     ['call', [[{a: 1}, 'fn'], 1]]
   );
+});
+
+test('prepareEff take', t => {
   t.deepEqual(
     prepareEff({TAKE: {pattern: 'action'}}),
     ['take', ['action']]
@@ -97,6 +107,9 @@ test('prepareEff', t => {
     prepareEff({ACTION_CHANNEL: {pattern: 'p', buffer: undefined}}),
     ['actionChannel', ['p']]
   );
+});
+
+test('prepareEff put', t => {
   t.deepEqual(
     prepareEff({PUT: {action: {type: 'a'}}}),
     ['put', [{type: 'a'}]]
@@ -121,9 +134,4 @@ test('prepareEff', t => {
   };
   testPutWithChannel('put');
   testPutWithChannel('put.sync', {sync: true});
-
-  t.deepEqual(
-    prepareEff({UNKNOWN: {x: 1, y: 2}}),
-    ['unknown']
-  );
 });

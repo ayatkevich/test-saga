@@ -1,4 +1,6 @@
-# test-saga [![Build Status](https://travis-ci.org/ayatkevich/test-saga.svg?branch=master)](https://travis-ci.org/ayatkevich/test-saga)
+# test-saga
+[![Build Status](https://travis-ci.org/ayatkevich/test-saga.svg?branch=master)](https://travis-ci.org/ayatkevich/test-saga)
+
 Work in progress! A bunch of helpers to make redux-saga testing more powerful.
 
 ## Why?
@@ -21,7 +23,8 @@ function * auth() {
 test(() => testSaga(auth, []));
 ```
 
-Before we start listening for any user triggered action it would be handy to check if there is any saved session in the browser local storage.
+Before we start listening for any user triggered action it would be handy to
+check if there is any saved session in the browser local storage.
 
 So we can do something like this to check it:
 
@@ -32,7 +35,7 @@ import {testSaga, calls} from 'test-saga/white-box';
 function * auth() {
 }
 
-test('check if there is any previously saved session in the browser', () =>
+test('check if there is any saved session in the browser', () =>
   testSaga(auth, [
     calls('localStorage.getItem', 'idToken')
   ])
@@ -63,7 +66,7 @@ function * auth() {
   yield call(get, 'idToken');
 }
 
-test('check if there is any previously saved session in the browser', () =>
+test('check if there is any saved session in the browser', () =>
   testSaga(auth, [
     calls('localStorage.getItem', 'idToken')
   ])
@@ -71,9 +74,11 @@ test('check if there is any previously saved session in the browser', () =>
 ```
 
 Notice, that `calls` does not actually check if we pass the same function.
-So, this 'localStorage.getItem' will be only used for printing assertion errors. And you can actually pass any function in the implementation.
+The helper will use 'localStorage.getItem' to print assertion error.
+And you can actually pass any function in the implementation.
 
-If you want to check that our saga calls exact function, you can pass not a string value to the calls helper as a first argument but a function itself.
+If you want to check that our saga calls exact function, you can pass not a
+string value to the calls helper as a first argument but a function itself.
 
 So,
 
@@ -90,7 +95,7 @@ function * auth() {
   yield call(get, 'idToken');
 }
 
-test(`check if there is any previously saved session in the browser,
+test(`check if there is any saved session in the browser,
       and if user is already authorized inform React about it`, () =>
   testSaga(auth, [
     calls(getItem, 'idToken')
