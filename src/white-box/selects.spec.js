@@ -1,5 +1,5 @@
 const test = require('ava');
-const {select} = require('redux-saga/effects');
+const {select, take} = require('redux-saga/effects');
 const {next, msgIs, msgTest} = require('./helpers');
 
 const selects = require('./selects');
@@ -15,6 +15,13 @@ test('got nothing', t => {
   t.throws(() => selects({}).from({})[0](), gotNothing);
   t.throws(() => selects({}).from({})[0]({}), gotNothing);
   t.throws(() => selects({}).from({})[0](next({})), gotNothing);
+});
+
+test('wrong', t => {
+  t.throws(() => selects({}).from({})[0](next(take())), msgIs(
+    ['select', []],
+    ['take', ['*']]
+  ));
 });
 
 test('selects(X).from(X)', t => {
