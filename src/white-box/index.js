@@ -1,6 +1,7 @@
 const R = require('ramda');
 
 const {gets, throws, signedTask} = require('./actions');
+const {joins, cancels} = require('./task-ops');
 
 const testSaga = (saga, steps) => {
   const generator = saga();
@@ -27,6 +28,7 @@ module.exports = {
   createsChannel: require('./creates-channel'),
   puts: require('./puts'),
   selects: require('./selects'),
-  joins: require('./joins'),
+  joins,
+  cancels,
   signedTask
 };
