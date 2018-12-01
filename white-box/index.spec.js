@@ -1,4 +1,4 @@
-const {gets, throws, testSaga} = require('.');
+const {gets, throws, returns, testSaga} = require('.');
 
 test('testSaga', () => {
   function* regeneratedTestGen() {
@@ -10,6 +10,7 @@ test('testSaga', () => {
     }
     yield 2;
     yield 3;
+    return 4;
   }
 
   const testVal = '__TEST_PASSED_VALUE__';
@@ -39,7 +40,8 @@ test('testSaga', () => {
       throws(testErr),
       value => expect(value).toEqual({value: testErr, done: false}),
       check(2),
-      check(3)
+      check(3),
+      returns(4)
     ])
   ).not.toThrow();
 

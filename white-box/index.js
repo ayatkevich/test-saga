@@ -1,7 +1,13 @@
+const assert = require('assert');
 const R = require('ramda');
 
 const {gets, throws, signedTask} = require('./actions');
 const {joins, cancels} = require('./task-ops');
+
+const returns = value => step => {
+  assert.equal(step.done, true);
+  assert.deepEqual(step.value, value);
+};
 
 const testSaga = (saga, steps) => {
   const generator = saga();
@@ -26,6 +32,7 @@ module.exports = {
   testSaga,
   gets,
   throws,
+  returns,
   calls: require('./calls'),
   takes: require('./takes'),
   createsChannel: require('./creates-channel'),
