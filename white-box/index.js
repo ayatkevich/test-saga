@@ -8,6 +8,9 @@ const testSaga = (saga, steps) => {
   let next = {action: 'next'};
 
   for (const step of R.flatten(steps)) {
+    if (next.action === 'throw') {
+      next.action = 'next';
+    }
     if (typeof step !== 'undefined' && step && step.action) {
       next = step;
       continue;
