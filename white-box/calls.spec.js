@@ -1,4 +1,3 @@
-const test = require('ava');
 const {call, apply, take, ...effects} = require('redux-saga/effects');
 const {next, msgIs} = require('./helpers');
 
@@ -8,27 +7,27 @@ const fn = () => {};
 const action = () => {};
 const context = {};
 
-test('call(fn, ...args)', t => {
-  t.throws(() => calls()());
-  t.throws(() => calls()(next(call(fn))));
+test('call(fn, ...args)', () => {
+  expect(() => calls()()).toThrow();
+  expect(() => calls()(next(call(fn)))).toThrow();
 
   const gotNothing = msgIs(
     ['call', [fn]],
     []
   );
-  t.throws(() => calls('fn')(), gotNothing);
-  t.throws(() => calls('fn')({}), gotNothing);
-  t.throws(() => calls('fn')(next({})), gotNothing);
+  expect(() => calls('fn')()).toThrow(gotNothing);
+  expect(() => calls('fn')({})).toThrow(gotNothing);
+  expect(() => calls('fn')(next({}))).toThrow(gotNothing);
 
-  t.throws(() => calls('action')(next(take('action'))), msgIs(
+  expect(() => calls('action')(next(take('action')))).toThrow(msgIs(
     ['call', [action]],
     ['take', ['action']]
   ));
-  t.throws(() => calls('fn')(next(call(fn, 1))), msgIs(
+  expect(() => calls('fn')(next(call(fn, 1)))).toThrow(msgIs(
     ['call', [fn]],
     ['call', [fn, 1]]
   ));
-  t.throws(() => calls(action)(next(call(fn))), msgIs(
+  expect(() => calls(action)(next(call(fn)))).toThrow(msgIs(
     ['call', [action]],
     ['call', [fn]]
   ));
@@ -39,8 +38,8 @@ test('call(fn, ...args)', t => {
   calls('fn', 1, {}, {a: 1})(next(call(fn, 1, {}, {a: 1})));
 });
 
-test('call([context, fn], ...args)', t => {
-  t.throws(() => calls('fn')(next(call([context, fn]))), msgIs(
+test('call([context, fn], ...args)', () => {
+  expect(() => calls('fn')(next(call([context, fn])))).toThrow(msgIs(
     ['call', [fn]],
     ['call', [[{}, fn]]]
   ));
@@ -48,8 +47,8 @@ test('call([context, fn], ...args)', t => {
   calls(['context', 'fn'])(next(call([context, fn])));
 });
 
-test('apply(context, fn, [args])', t => {
-  t.throws(() => calls(fn)(next(apply(context, fn))), msgIs(
+test('apply(context, fn, [args])', () => {
+  expect(() => calls(fn)(next(apply(context, fn)))).toThrow(msgIs(
     ['call', [fn]],
     ['call', [[{}, fn]]]
   ));
@@ -58,8 +57,8 @@ test('apply(context, fn, [args])', t => {
 const testDrivativeCallEffect = name => {
   const eff = effects[name];
 
-  test(`${name}(fn, ...args)`, t => {
-    t.throws(() => calls(fn)(next(eff(fn, 1))), msgIs(
+  test(`${name}(fn, ...args)`, () => {
+    expect(() => calls(fn)(next(eff(fn, 1)))).toThrow(msgIs(
       [name, [fn]],
       [name, [fn, 1]]
     ));
@@ -67,8 +66,8 @@ const testDrivativeCallEffect = name => {
     calls(fn)(next(eff(fn)));
   });
 
-  test(`${name}([context, fn], ...args)`, t => {
-    t.throws(() => calls('fn')(next(eff([context, fn]))), msgIs(
+  test(`${name}([context, fn], ...args)`, () => {
+    expect(() => calls('fn')(next(eff([context, fn])))).toThrow(msgIs(
       [name, [fn]],
       [name, [[{}, fn]]]
     ));

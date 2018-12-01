@@ -14,7 +14,6 @@ Work in progress! A bunch of helpers to make redux-saga testing more powerful.
 Let's assume we want to develop an auth saga.
 
 ```js
-import test from 'ava';
 import {testSaga} from 'test-saga/white-box';
 
 function * auth() {
@@ -29,7 +28,6 @@ check if there is any saved session in the browser local storage.
 So we can do something like this to check it:
 
 ```js
-import test from 'ava';
 import {testSaga, calls} from 'test-saga/white-box';
 
 function * auth() {
@@ -54,7 +52,6 @@ Got:
 And the working implementation for this would be something like:
 
 ```js
-import test from 'ava';
 import {testSaga, calls} from 'test-saga/white-box';
 
 import {get} from 'lockr';
@@ -83,7 +80,6 @@ string value to the calls helper as a first argument but a function itself.
 So,
 
 ```js
-import test from 'ava';
 import {testSaga, calls} from 'test-saga/white-box';
 
 import {get} from 'lockr';

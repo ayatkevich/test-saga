@@ -1,5 +1,4 @@
-const test = require('ava');
-const W = require('../../src/white-box');
+const W = require('../../white-box');
 
 const {logout, login, authenticated, unauthenticated} = require('./actions');
 const auth = require('./saga');

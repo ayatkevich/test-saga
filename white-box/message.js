@@ -29,11 +29,11 @@ const camelize = R.pipe(
 );
 
 const retrieveEff = (step = {}) => {
-  let name = R.find(key => R.toUpper(key) === key, R.keys(step));
+  let name = R.find(key => R.toUpper(key) === key, R.keys(step)) || step.type;
   if (!name) {
     return {name: undefined, eff: {}};
   }
-  const eff = step[name];
+  const eff = step[name] || step.payload;
   if (name === 'FORK' && eff.detached) {
     name = 'SPAWN';
   } else if (name === 'PUT' && eff.sync) {
@@ -59,7 +59,7 @@ const prepareEff = (step = {}) => {
       ];
 
     case 'take':
-      return [eff.maybe ? 'takem' : name, [eff.pattern]];
+      return [eff.maybe ? 'takeMaybe' : name, [eff.pattern]];
 
     case 'actionChannel':
       return [name, filterTruthy([eff.pattern, eff.buffer])];

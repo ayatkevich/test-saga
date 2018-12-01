@@ -3,11 +3,9 @@
   "description": "A bunch of helpers to make redux-saga testing more powerful.",
   "main": "white-box/index.js",
   "scripts": {
-    "build": "rimraf white-box && babel -D src -d .",
-    "lint": "xo",
-    "test": "node --harmony node_modules/.bin/ava",
-    "test:build": "yarn run test -- 'white-box/**/*.spec.js'",
-    "coverage": "nyc yarn run test && nyc check-coverage --lines 100 --functions 100 --branches 100",
+    "lint": "eslint **/*.js --ignore-pattern '!node_modules/**/*.js'",
+    "test": "jest",
+    "coverage": "yarn run test --coverage",
     "commit": "yarn run lint && yarn run coverage && git cz",
     "semantic-release": "semantic-release pre && npm publish && semantic-release post"
   },
@@ -36,83 +34,35 @@
       "path": "./node_modules/cz-conventional-changelog"
     }
   },
-  "babel": {
-    "presets": [
-      "es2015",
-      "stage-0"
-    ]
+  "jest": {
+    "coverageThreshold": {
+      "global": {
+        "branches": 100,
+        "functions": 100,
+        "lines": 100,
+        "statements": 100
+      }
+    }
   },
-  "nyc": {
-    "include": [
-      "src/**/*.js"
-    ],
-    "exclude": [
-      "node_modules",
-      "src/**/*.spec.js"
-    ]
-  },
-  "ava": {
-    "files": [
-      "src/**/*.spec.js",
-      "examples/**/*.spec.js"
-    ],
-    "source": [
-      "src/**/*.js"
-    ]
-  },
-  "xo": {
-    "parser": "babel-eslint",
-    "envs": [
-      "node",
-      "es6"
-    ],
-    "esnext": true,
-    "extends": [],
-    "plugins": [
-      "babel"
-    ],
-    "space": true,
-    "rules": {
-      "quotes": [
-        "error",
-        "single"
-      ],
-      "max-len": [
-        "error",
-        80
-      ]
-    },
-    "ignores": [
-      "white-box/**/*"
-    ]
+  "prettier": {
+    "singleQuote": true,
+    "bracketSpacing": false
   },
   "dependencies": {
-    "ramda": "^0.22.1"
+    "ramda": "^0.26.1"
   },
   "devDependencies": {
     "action-helper": "^1.1.0",
-    "ava": "^0.16.0",
-    "babel-cli": "^6.18.0",
-    "babel-eslint": "^7.1.0",
-    "babel-plugin-istanbul": "^2.0.3",
-    "babel-preset-es2015": "^6.18.0",
-    "babel-preset-stage-0": "^6.16.0",
-    "babel-register": "^6.18.0",
-    "commitizen": "^2.8.6",
-    "cross-env": "^3.1.3",
-    "cz-conventional-changelog": "^1.2.0",
-    "eslint": "^3.9.1",
-    "eslint-config-xo": "^0.17.0",
-    "eslint-plugin-babel": "^3.3.0",
-    "firebase": "^3.6.2",
-    "lockr": "^0.8.4",
-    "nyc": "^8.4.0",
-    "redux-saga": "^0.12.1",
-    "rimraf": "^2.5.4",
-    "semantic-release": "^4.3.5",
-    "xo": "^0.17.0"
+    "commitizen": "^3.0.5",
+    "cz-conventional-changelog": "^2.1.0",
+    "eslint": "^5.9.0",
+    "eslint-plugin-jest": "^22.1.0",
+    "jest": "^23.6.0",
+    "lockr": "^0.8.5",
+    "redux-saga": "^1.0.0-beta.3",
+    "semantic-release": "^4.3.5"
   },
   "peerDependencies": {
-    "redux-saga": "^0.12.1"
+    "redux-saga": "^1.0.0-beta.3"
   }
 }

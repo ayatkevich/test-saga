@@ -1,20 +1,21 @@
 const {get, sadd} = require('lockr');
 const {actionChannel, take, call} = require('redux-saga/effects');
-const {buffers: {sliding}} = require('redux-saga');
+const {
+  buffers: {sliding}
+} = require('redux-saga');
 const actions = require('./actions');
 
 module.exports = shoppingCart;
 
 const api = {
-  shoppingCartAddItem: item => new Promise(resolve =>
-    setTimeout(resolve, 0, item)
-  ),
-  shoppingCartSubmit: items => new Promise(resolve =>
-    setTimeout(resolve, 0, items)
-  )
+  shoppingCartAddItem: item =>
+    new Promise(resolve => setTimeout(resolve, 0, item)),
+  shoppingCartSubmit: items =>
+    new Promise(resolve => setTimeout(resolve, 0, items))
 };
+module.exports.api = api;
 
-function * submit() {
+function* submit() {
   const items = yield call(get, 'items');
   if (!items || items.length === 0) {
     return;
@@ -22,7 +23,7 @@ function * submit() {
   yield call(api.shoppingCartSubmit, items);
 }
 
-function * addItem({item}) {
+function* addItem({item}) {
   if (!item) {
     return;
   }
@@ -30,25 +31,24 @@ function * addItem({item}) {
   yield call(api.shoppingCartAddItem, item);
 }
 
-function * shoppingCart() {
-  const channel = yield actionChannel([
-    actions.submit.type,
-    actions.addItem.type
-  ], sliding(1));
+function* shoppingCart() {
+  const channel = yield actionChannel(
+    [actions.submit.type, actions.addItem.type],
+    sliding(1)
+  );
 
   for (;;) {
     const action = yield take(channel);
     switch (action.type) {
       case actions.submit.type:
-        yield * submit();
+        yield* submit();
         break;
 
       case actions.addItem.type:
-        yield * addItem(action);
+        yield* addItem(action);
         break;
 
-      default:
-        break;
+      // skip default
     }
   }
 }

@@ -1,7 +1,6 @@
-const test = require('ava');
 const {gets, throws, testSaga} = require('.');
 
-test('testSaga', t => {
+test('testSaga', () => {
   function * regeneratedTestGen() {
     try {
       const valueFromNext = yield 1;
@@ -14,27 +13,27 @@ test('testSaga', t => {
   const testVal = '__TEST_PASSED_VALUE__';
   const testErr = '__TEST_ERR__';
 
-  t.notThrows(() =>
+  expect(() =>
     testSaga(regeneratedTestGen, [null, undefined, 1, '', {}, [], false])
-  );
+  ).not.toThrow();
 
-  const checkFirst = value => t.deepEqual(value, {value: 1, done: false});
+  const checkFirst = value => expect(value).toEqual({value: 1, done: false});
 
   testSaga(regeneratedTestGen, [
     checkFirst,
-    value => t.deepEqual(value, {value: undefined, done: false})
+    value => expect(value).toEqual({value: undefined, done: false})
   ]);
 
   testSaga(regeneratedTestGen, [
     checkFirst,
     gets(testVal),
-    value => t.deepEqual(value, {value: testVal, done: false})
+    value => expect(value).toEqual({value: testVal, done: false})
   ]);
 
   testSaga(regeneratedTestGen, [
     checkFirst,
     throws(testErr),
-    value => t.deepEqual(value, {value: testErr, done: false})
+    value => expect(value).toEqual({value: testErr, done: false})
   ]);
 
   let counter = 0;
@@ -47,5 +46,5 @@ test('testSaga', t => {
   /* eslint-disable no-return-assign */
   const inc = ({value: x}) => counter += x;
   testSaga(counterGen, [[inc], [[inc], inc], inc]);
-  t.is(counter, 10);
+  expect(counter).toBe(10);
 });

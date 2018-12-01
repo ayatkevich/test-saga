@@ -1,24 +1,26 @@
 sudo: required
 dist: trusty
+env:
+  global:
+    - CC_TEST_REPORTER_ID=1b0a9f1a526af0fc80aa9e4bc40ec1b72f67d8d22a9a665f6470cda24fd1bd1c
 cache:
+  yarn: true
   directories:
-    - $HOME/.yarn-cache
+    - node_modules
 notifications:
   email: false
 before_install:
-  - nvm install 7
-  # Repo for Yarn
-  - sudo apt-key adv --fetch-keys http://dl.yarnpkg.com/debian/pubkey.gpg
-  - echo "deb http://dl.yarnpkg.com/debian/ stable main" | sudo tee /etc/apt/sources.list.d/yarn.list
-  - sudo apt-get update -qq
-  - sudo apt-get install -y -qq yarn
+  - nvm install 11
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
 before_script:
   - yarn
 script:
   - yarn run lint
   - yarn run coverage
-  - yarn run build
-  - yarn run test:build
+after_script:
+  - ./cc-test-reporter after-build -t lcov --exit-code $TRAVIS_TEST_RESULT
 after_success:
   - yarn run semantic-release
 branches:

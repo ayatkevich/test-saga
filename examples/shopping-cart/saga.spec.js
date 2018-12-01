@@ -1,11 +1,10 @@
-const test = require('ava');
 const {
   testSaga,
   calls,
   takes,
   createsChannel,
   gets
-} = require('../../src/white-box');
+} = require('../../white-box');
 
 const actions = require('./actions');
 const shoppingCart = require('./saga');
@@ -78,4 +77,14 @@ test('get the list of items and make user able to update it', () => {
     // it should not update the local storage
     waitsForAddItem
   ]);
+});
+
+describe('api', () => {
+  test('shoppingCart.api.shoppingCartAddItem', () => {
+    shoppingCart.api.shoppingCartAddItem();
+  });
+
+  test('shoppingCart.api.shoppingCartSubmit', () => {
+    shoppingCart.api.shoppingCartSubmit();
+  });
 });
