@@ -5,8 +5,6 @@ const selects = require('./selects');
 
 test('empty', () => {
   expect(() => selects({}).from()[0]()).toThrow(msgTest(/empty/));
-  expect(() => selects().from({})[0]()).toThrow(msgTest(/empty/));
-  expect(() => selects().from()[0]()).toThrow(msgTest(/empty/));
 });
 
 test('got nothing', () => {
@@ -39,4 +37,9 @@ test('selects(y).from(Y)', () => {
 test('does not equal', () => {
   const [$selects] = selects({x: 1}).from({y: 2});
   expect(() => $selects(next(select()))).toThrow(msgTest(/does not/));
+});
+
+test('selects(falsy value).from(Y)', () => {
+  const [$selects] = selects(undefined).from({y: 2});
+  expect(() => $selects(next(select(() => {})))).not.toThrow();
 });

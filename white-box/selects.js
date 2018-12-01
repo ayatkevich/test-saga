@@ -4,8 +4,6 @@ const {assertionMessage, retrieveEff, prepareEff} = require('./message');
 const {gets} = require('./actions');
 
 const selects = (expected, state) => ({value: step = {}} = {}) => {
-  assert(expected,
-    'selects(expected).from(state): expected cannot be empty');
   assert(state,
     'selects(expected).from(state): state cannot be empty');
 
