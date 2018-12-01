@@ -1,4 +1,4 @@
-const {select, ...effs} = require('redux-saga/effects');
+const {select, cancelled, ...effs} = require('redux-saga/effects');
 const {createMockTask} = require('redux-saga/utils');
 const {namedFn} = require('./message');
 const {next, msgIs, msgTest} = require('./helpers');
@@ -35,3 +35,24 @@ const testOp = (eff, op) => {
 
 testOp('join', 'joins');
 testOp('cancel', 'cancels');
+
+describe('isCancelled', () => {
+  const [isCancelled] = ops.isCancelled();
+
+  test('nothing', () => {
+    const gotNothing = msgIs(['cancelled', []], []);
+    expect(() => isCancelled()).toThrow(gotNothing);
+    expect(() => isCancelled({})).toThrow(gotNothing);
+    expect(() => isCancelled(next({}))).toThrow(gotNothing);
+  });
+
+  test('wrong', () => {
+    expect(() => isCancelled(next(select()))).toThrow(
+      msgIs(['cancelled', []], ['select', []])
+    );
+  });
+
+  test('correct', () => {
+    expect(() => isCancelled(next(cancelled()))).not.toThrow();
+  });
+});
