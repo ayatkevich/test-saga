@@ -28,7 +28,7 @@ test('assertionMessage', () => {
   ).toBe(`
     ${expectedMessage}
     Got:
-      yield call(fnName, 0, false, () => {}, {"a":1}, [1]);
+      yield call(fnName, 0, false, [anonymous], {"a":1}, [1]);
   `);
 
   expect(
@@ -40,7 +40,7 @@ test('assertionMessage', () => {
     `
     ${expectedMessage}
     Got:
-      yield call([{"b":2}, fnName], 0, false, () => {}, {"a":1}, [1]);
+      yield call([{"b":2}, fnName], 0, false, [anonymous], {"a":1}, [1]);
   `
   );
 
@@ -49,6 +49,14 @@ test('assertionMessage', () => {
     ${expectedMessage}
     Got:
       nothing
+  `
+  );
+
+  expect(assertionMessage(expected, ['call', [() => {}, 0, false]])).toBe(
+    `
+    ${expectedMessage}
+    Got:
+      yield call([anonymous], 0, false);
   `
   );
 });

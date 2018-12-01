@@ -8,7 +8,7 @@ const inspectArgs = args => R.pipe(R.map(v => {
     return `[${inspectArgs(v)}]`;
   }
   if (R.is(Function, v)) {
-    return v.name || v.toString();
+    return v.name || '[anonymous]';
   }
   return JSON.stringify(v);
 }), R.join(', '))(args);
