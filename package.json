@@ -49,7 +49,7 @@
     "bracketSpacing": false
   },
   "dependencies": {
-    "ramda": "^0.26.1"
+    "ramda": "^0.27.0"
   },
   "devDependencies": {
     "action-helper": "^1.1.0",
